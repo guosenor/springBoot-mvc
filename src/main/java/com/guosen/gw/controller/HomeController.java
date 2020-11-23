@@ -12,15 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 @RestController
 public class HomeController {
     @Autowired
     UserService userService;
-    
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     @ResponseBody
     public String Index(HttpSession session) {
-        Optional<User> user = userService.findById(1);
-        return JSONObject.toJSON(user.get()).toString();
+        User user = userService.findName("guosen");
+        user.setPassword("1234567");
+        userService.save(user);
+        return JSONObject.toJSON(user).toString();
     }
 }

@@ -5,5 +5,6 @@ import com.guosen.gw.model.User;
 import org.springframework.data.repository.CrudRepository;
 
 public interface  UserDao extends CrudRepository<User, Integer> {
-    User findByName(String name);
+    public User findOneByName(String name);
+    public User save(User user);
 }

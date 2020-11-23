@@ -42,4 +42,8 @@ public class User {
     @ManyToMany(cascade = CascadeType.REFRESH)
     @JoinTable(name = "user_roles",joinColumns = @JoinColumn (name = "user_id", referencedColumnName = "id"),inverseJoinColumns = @JoinColumn (name = "role_id", referencedColumnName = "id"))
     public List<Role> roles = new ArrayList<>();
+    
+    public void setPassword(String pwd){
+        this.password = pwd;
+    }
 }

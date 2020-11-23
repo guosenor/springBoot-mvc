@@ -14,7 +14,7 @@ public class UserService {
     private UserDao userDao;
 
     public User findName(String name) {
-        return userDao.findByName(name);
+        return userDao.findOneByName(name);
     }
 
     public Optional<User> findById(Integer id) {
@@ -24,5 +24,9 @@ public class UserService {
     public List<User> list(){
         List<User> list = (List<User>) userDao.findAll();
         return list;
+    }
+
+    public User save(User user){
+        return userDao.save(user);
     }
 }
