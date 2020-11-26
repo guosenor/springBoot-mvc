@@ -46,4 +46,7 @@ public class User {
     public void setPassword(String pwd){
         this.password = pwd;
     }
+    public void setName(String name){
+        this.name = name;
+    }
 }

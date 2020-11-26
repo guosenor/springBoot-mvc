@@ -1,11 +1,14 @@
 package com.guosen.gw.service;
-import java.util.List;
+
 import java.util.Optional;
 
 import com.guosen.gw.dao.UserDao;
 import com.guosen.gw.model.User;
-
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,9 +24,9 @@ public class UserService {
         return userDao.findById(id);
     }
 
-    public List<User> list(){
-        List<User> list = (List<User>) userDao.findAll();
-        return list;
+    public Page<User> list(Specification<User> querySpec,Pageable pageable){
+        Page<User> page = userDao.findAll(querySpec,pageable);
+        return page;
     }
 
     public User save(User user){

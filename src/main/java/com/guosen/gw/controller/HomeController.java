@@ -1,6 +1,5 @@
 package com.guosen.gw.controller;
 
-import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -22,7 +21,7 @@ public class HomeController {
     @ResponseBody
     public String Index(HttpSession session) {
         User user = userService.findName("guosen");
-        user.setPassword("1234567");
+        user.setPassword("1234569");
         userService.save(user);
         return JSONObject.toJSON(user).toString();
     }
