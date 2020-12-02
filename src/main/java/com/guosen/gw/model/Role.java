@@ -24,6 +24,7 @@ public class Role {
     
     @Column(nullable = true,columnDefinition = "varchar(45) default '' comment '用户名'")
     public String name;
+    
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:dd")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd")
     @Column(nullable = true, insertable = false, updatable = false)

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -41,8 +42,8 @@ public class User {
     @Column(nullable = true, insertable = false, updatable = false)
     
     private Date createDate;
-    @ManyToMany(cascade = CascadeType.REFRESH)
-    
+
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",joinColumns = @JoinColumn (name = "user_id", referencedColumnName = "id"),inverseJoinColumns = @JoinColumn (name = "role_id", referencedColumnName = "id"))
     public List<Role> roles = new ArrayList<>();
     

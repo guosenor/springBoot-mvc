@@ -1,4 +1,4 @@
-package com.guosen.gw.form;
+package com.guosen.gw.pojo;
 
 import io.swagger.annotations.ApiModel;
 

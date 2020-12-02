@@ -10,8 +10,10 @@ import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSONObject;
-import com.guosen.gw.form.UserForm;
+import com.guosen.gw.auth.AuthCheck;
+import com.guosen.gw.auth.AuthCode;
 import com.guosen.gw.model.User;
+import com.guosen.gw.pojo.UserForm;
 import com.guosen.gw.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -39,8 +41,8 @@ public class UserController {
     @Autowired
     private HttpSession session;
 
-    @ApiOperation(value = "创建用户", produces = "application/json")
-    @RequestMapping(value = "/user/create", method = RequestMethod.POST)
+    @ApiOperation(value = "用户注册", produces = "application/json")
+    @RequestMapping(value = "/user/register", method = RequestMethod.POST)
     @ResponseBody
     public String Create(@RequestBody UserForm form) {
         User user = new User();
@@ -76,10 +78,10 @@ public class UserController {
 
     @ApiOperation(value = "用户登录检查", produces = "application/json")
     @RequestMapping(value = "/user/myself", method = RequestMethod.GET)
+    @AuthCheck(AuthCode.login)
     @ResponseBody
     public String Myself() {
         if(session.getAttribute("userId")!=null){
-            System.out.println(session.getAttribute("user"));
             return JSONObject.toJSONString(session.getAttribute("user"));
         }
         return "{\"status\":\"fail\"}";
@@ -134,7 +136,12 @@ public class UserController {
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
     @ResponseBody
     public String Index(@PathVariable("userId") Integer userId) {
-        Optional<User> user = userService.findById(userId);
-        return JSONObject.toJSON(user).toString();
+        try {
+            Optional<User> user = userService.findById(userId);
+            return JSONObject.toJSON(user).toString();
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+        return "{\"status\":\"fail\",\"message\":404}";
     }
 }
