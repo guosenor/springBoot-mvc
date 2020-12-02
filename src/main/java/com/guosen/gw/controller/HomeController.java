@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import io.swagger.annotations.Api;
+@Api(value = "类描述", tags = {"Home"})
 @RestController
 public class HomeController {
     @Autowired

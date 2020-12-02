@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,20 +34,31 @@ public class User {
     public String name;
 
     @Column(nullable = true,columnDefinition = "varchar(100) default '' comment '密码'")
-    private String password;
+	private String password;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:dd")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd")
     @Column(nullable = true, insertable = false, updatable = false)
+    
     private Date createDate;
     @ManyToMany(cascade = CascadeType.REFRESH)
+    
     @JoinTable(name = "user_roles",joinColumns = @JoinColumn (name = "user_id", referencedColumnName = "id"),inverseJoinColumns = @JoinColumn (name = "role_id", referencedColumnName = "id"))
     public List<Role> roles = new ArrayList<>();
     
     public void setPassword(String pwd){
-        this.password = pwd;
+        this.password = BCrypt.hashpw(pwd, BCrypt.gensalt());
     }
+
+    public Boolean checkPwd(String pwd){
+       return BCrypt.checkpw(pwd, this.password);
+    }
+
     public void setName(String name){
         this.name = name;
+    }
+
+    public Integer getId(){
+        return this.id;
     }
 }
