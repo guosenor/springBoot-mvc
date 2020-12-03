@@ -31,7 +31,7 @@ public class User {
     @Column(unique = true, nullable = false, insertable = true, updatable = false)
     private int id;
     
-    @Column(nullable = true,columnDefinition = "varchar(45) default '' comment '用户名'")
+    @Column(nullable = true,unique = true,columnDefinition = "varchar(45) default '' comment '用户名'")
     public String name;
 
     @Column(nullable = true,columnDefinition = "varchar(100) default '' comment '密码'")

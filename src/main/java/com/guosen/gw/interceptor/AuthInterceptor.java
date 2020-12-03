@@ -17,14 +17,19 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        AuthCheck code = ((HandlerMethod) handler).getMethodAnnotation(AuthCheck.class);
-        if(code==null){
+        try {
+            AuthCheck code = ((HandlerMethod) handler).getMethodAnnotation(AuthCheck.class);
+            if(code==null){
+                return true;
+            }
+            if( code.value() == AuthCode.login){
+                return this.loginCheck(request, response);
+            }else{
+                return this.loginCheck(request, response) && this.authCheck(request, response);
+            }
+        } catch (Exception e) {
+            //TODO: handle exception
             return true;
-        }
-        if( code.value() == AuthCode.login){
-            return this.loginCheck(request, response);
-        }else{
-            return this.loginCheck(request, response) && this.authCheck(request, response);
         }
     }
 
