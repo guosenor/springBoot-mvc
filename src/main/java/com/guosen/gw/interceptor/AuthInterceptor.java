@@ -1,9 +1,13 @@
 package com.guosen.gw.interceptor;
 
+import java.io.PrintWriter;
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSON;
 import com.guosen.gw.auth.AuthCheck;
 import com.guosen.gw.auth.AuthCode;
 
@@ -22,15 +26,33 @@ public class AuthInterceptor implements HandlerInterceptor {
             if(code==null){
                 return true;
             }
-            if( code.value() == AuthCode.login){
-                return this.loginCheck(request, response);
-            }else{
-                return this.loginCheck(request, response) && this.authCheck(request, response);
+            if(!this.loginCheck(request, response)){
+                PrintWriter pw = response.getWriter();
+                response.setHeader("Content-Type", "application/json");
+                HashMap<String,Object> error = new HashMap<String,Object>();
+                error.put("status", 401);
+                error.put("message", "please login");
+                pw.write(JSON.toJSONString(error));
+                pw.flush();
+                pw.close();
+                return false;
             }
+            if( code.value() != AuthCode.login && this.authCheck(request, code)!=true){
+                PrintWriter pw = response.getWriter();
+                response.setHeader("Content-Type", "application/json");
+                HashMap<String,Object> error = new HashMap<String,Object>();
+                error.put("status", 401);
+                error.put("message", "no auth");
+                pw.write(JSON.toJSONString(error));
+                pw.flush();
+                pw.close();
+                return false;
+            }
+           
         } catch (Exception e) {
-            //TODO: handle exception
-            return true;
+            //TODO: handle exception   
         }
+        return true;
     }
 
     private boolean loginCheck(HttpServletRequest request,HttpServletResponse response){
@@ -43,7 +65,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
         return false;
     }
-    private boolean authCheck(HttpServletRequest request,HttpServletResponse response){
+    private boolean authCheck(HttpServletRequest request,AuthCheck code){
         return false;
     }
 }

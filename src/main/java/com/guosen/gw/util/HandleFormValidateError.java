@@ -12,7 +12,6 @@ public class HandleFormValidateError {
         result.put("status",400);
         List<Object> errors = new ArrayList<Object>();
         fieldErrors.forEach(item->{
-            System.out.println(item);
             HashMap<String,Object> error = new HashMap<String,Object>();
             error.put("code", item.getCode());
             error.put("message", item.getDefaultMessage());
