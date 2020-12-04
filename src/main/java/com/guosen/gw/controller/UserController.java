@@ -15,12 +15,16 @@ import com.guosen.gw.auth.AuthCode;
 import com.guosen.gw.model.User;
 import com.guosen.gw.pojo.UserForm;
 import com.guosen.gw.service.UserService;
+import com.guosen.gw.util.HandleFormValidateError;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,10 +45,13 @@ public class UserController {
     @Autowired
     private HttpSession session;
 
-    @ApiOperation(value = "用户注册", produces = "application/json")
-    @RequestMapping(value = "/user/register", method = RequestMethod.POST)
+    @ApiOperation(value = "用户注册")
+    @RequestMapping(value = "/user/register", method = RequestMethod.POST,produces = "application/json")
     @ResponseBody
-    public String Create(@RequestBody UserForm form) {
+    public String Create(@RequestBody @Validated UserForm form,BindingResult userFormBindingResult ) {
+        if(userFormBindingResult.hasErrors()){
+            return HandleFormValidateError.format(userFormBindingResult.getFieldErrors());
+        }
         User user = new User();
         user.setName(form.name);
         user.setPassword(form.password);
@@ -52,10 +59,13 @@ public class UserController {
         return "{\"status\":\"success\"}";
     }
 
-    @ApiOperation(value = "用户登录", produces = "application/json")
-    @RequestMapping(value = "/user/login", method = RequestMethod.POST)
+    @ApiOperation(value = "用户登录")
+    @RequestMapping(value = "/user/login", method = RequestMethod.POST, produces = "application/json" )
     @ResponseBody
-    public String Login(@RequestBody UserForm form) {
+    public String Login(@RequestBody @Validated UserForm form,BindingResult userFormBindingResult ) {
+        if(userFormBindingResult.hasErrors()){
+            return HandleFormValidateError.format(userFormBindingResult.getFieldErrors());
+        }
         User user = userService.findName(form.name);
         if(user!= null){
             if(user.checkPwd(form.password)){
@@ -76,8 +86,8 @@ public class UserController {
         return "{\"status\":\"success\"}";
     }
 
-    @ApiOperation(value = "用户登录检查", produces = "application/json")
-    @RequestMapping(value = "/user/myself", method = RequestMethod.GET)
+    @ApiOperation(value = "用户登录检查")
+    @RequestMapping(value = "/user/myself", method = RequestMethod.GET,  produces = "application/json")
     @AuthCheck(AuthCode.login)
     @ResponseBody
     public String Myself() {
@@ -87,8 +97,8 @@ public class UserController {
         return "{\"status\":\"fail\"}";
     }
 
-    @ApiOperation(value = "列表", produces = "application/json")
-    @RequestMapping(value = "/user/list", method = RequestMethod.GET)
+    @ApiOperation(value = "列表")
+    @RequestMapping(value = "/user/list", method = RequestMethod.GET,  produces = "application/json")
     @ResponseBody
     public Object list(@RequestParam(name = "pageNum", defaultValue = "0") int pageNum,
             @RequestParam(name = "pageSize", defaultValue = "2") int pageSize,
@@ -132,8 +142,8 @@ public class UserController {
  
     }
 
-    @ApiOperation(value = "findById", produces = "application/json")
-    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
+    @ApiOperation(value = "findById")
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET,  produces = "application/json")
     @ResponseBody
     public String Index(@PathVariable("userId") Integer userId) {
         try {

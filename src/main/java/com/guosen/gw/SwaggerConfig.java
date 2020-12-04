@@ -21,7 +21,7 @@ public class SwaggerConfig {
     private String basePackage = "com.guosen.gw.controller";
 
     //当前文档的标题
-    private String title = "spring MVC demo";
+    private String title = "gw demo";
 
     //当前文档的详细描述
     private String description = "test";
