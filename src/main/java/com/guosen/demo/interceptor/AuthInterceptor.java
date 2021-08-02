@@ -56,7 +56,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     private boolean loginCheck(HttpServletRequest request,HttpServletResponse response){
-        
+    
         //判断登录
         HttpSession session = request.getSession();
         Integer userId  = (Integer) session.getAttribute("userId");

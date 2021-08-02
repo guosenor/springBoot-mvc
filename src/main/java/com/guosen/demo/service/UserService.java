@@ -20,4 +20,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     public User findOneByName(String name){
         return mapper.findOneByName(name);
     }
+
+    public User findOneByNameWithRoles(String name){
+        return mapper.findOneByNameWithRoles(name);
+    }
 }

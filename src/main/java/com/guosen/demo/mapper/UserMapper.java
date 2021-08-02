@@ -9,4 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper extends BaseMapper<User> {
     public Integer selectCountAll();
     public User findOneByName(String name);
+    public User findOneByNameWithRoles(String name);
 }

@@ -59,9 +59,10 @@ public class UserController {
         if (userFormBindingResult.hasErrors()) {
             return HandleFormValidateError.format(userFormBindingResult.getFieldErrors());
         }
-        User user = userService.findOneByName(form.name);
+        User user = userService.findOneByNameWithRoles(form.name);
         JSONObject res = new JSONObject();
         if(user!=null && user.checkPwd(form.password)){
+            System.out.println(JSONObject.toJSONString(user));
             session.setAttribute("userId", user.getId());
             session.setAttribute("user", JSONObject.toJSON(user));
             res.put("code", 0);
